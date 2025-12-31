@@ -1,0 +1,9 @@
+					---HANGMAN game instructions---
+
+1- The game cicle through the words file and take a random word that contains 5-12 characters
+2- Based on the word's chosen length the game shows the player same number of characters replaced by _ 
+3- The player should enter 1 character guess per turn, if it's true the game reveals the hidden character under _ 
+   and if it's wrong shows a mesage the player that the guess is wrong 
+4- The player have 5 chances and whenever the player get a wrong guess it start to reduce it's chances and lose when the   number of chances are 0
+5- After finishing the whole game add a feature to let the player save the game and return to it and continue from
+   where the player left the game
