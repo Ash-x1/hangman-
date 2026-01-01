@@ -1,5 +1,4 @@
 #!/usr/bin/env ruby
-# require 'yaml'
 class Hangman
   attr_reader :secret, :guess
 
@@ -8,20 +7,37 @@ class Hangman
     @guess
   end
 
-  def pick_word
+  def secret_word
     file = File.readlines('hangman_words.txt').map(&:chomp)
-    @secret = file.select { |word| 5 <= word.length && word.length <= 12 }.sample
+    @secret = file.select { |word| 5 <= word.length && word.length <= 12 }.sample.downcase
     p @secret
+    @secret
   end
 
   def hide_secret
     hide = @secret.chars.map do |i|
-      @secret.replace('_')
+      '_'
     end
     p hide
+  end
+
+  def guess_word
+    @guess = gets.chomp.downcase
+    p @guess
+    @guess
+  end
+
+  def game_result(guess, secret)
+    if guess == secret
+      p 'Congratulations'
+    else
+      p 'At least u tried'
+    end
   end
 end
 
 play = Hangman.new
-play.pick_word
+secret = play.secret_word
 play.hide_secret
+guess = play.guess_word
+play.game_result(guess, secret)
