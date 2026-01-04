@@ -1,10 +1,11 @@
 #!/usr/bin/env ruby
 class Hangman
-  attr_reader :secret, :guess
+  attr_reader :secret, :guess, :hide
 
   def initalize
     @secret
     @guess
+    @hide
   end
 
   def secret_word
@@ -15,14 +16,14 @@ class Hangman
   end
 
   def hide_secret
-    hide = @secret.chars.map do |i|
+    @hide = @secret.chars.map do |i|
       '_'
     end
-    p hide
+    p @hide
+    @hide
   end
 
   def guess_word
-    # @guess = gets.chomp.downcase
     @guess = ""
     until @guess.length == 1 do 
       p 'Please insert your guess (tip: you should type only 1 character)'
@@ -30,6 +31,25 @@ class Hangman
       p @guess 
     end
     @guess
+  end
+  
+  def check_answer
+    if @secret.include?(@guess)
+      p 'That is great'
+    else 
+      p 'That is wrong'
+    end
+  end
+
+  def reveal_char
+    guess  = @guess
+    secret = @secret.chars
+    hide   = @hide
+    secret.each_with_index do |char, idx|
+      if guess == char 
+        p "the index is: #{idx}"
+      end
+    end
   end
 
   def game_result(guess, secret)
@@ -45,4 +65,6 @@ play = Hangman.new
 secret = play.secret_word
 play.hide_secret
 guess = play.guess_word
+play.check_answer
+play.reveal_char
 play.game_result(guess, secret)
