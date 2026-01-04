@@ -1,73 +1,69 @@
 #!/usr/bin/env ruby
+
 class Hangman
   attr_reader :secret, :guess, :hide
 
-  def initalize
-    @secret
-    @guess
-    @hide
+  def initialize
+    @secret = nil
+    @guess  = nil
+    @hide   = []
   end
 
   def secret_word
     file = File.readlines('hangman_words.txt').map(&:chomp)
-    @secret = file.select { |word| 5 <= word.length && word.length <= 12 }.sample.downcase
+    @secret = file.select { |word| word.length.between?(5, 12) }.sample.downcase
     p @secret
     @secret
   end
 
   def hide_secret
-    @hide = @secret.chars.map do |i|
-      '_'
-    end
-    p @hide
-    @hide
+    @hide = @secret.chars.map { '_' }
+    puts @hide.join(' ')
   end
 
   def guess_word
-    @guess = ""
-    until @guess.length == 1 do 
-      p 'Please insert your guess (tip: you should type only 1 character)'
+    begin
+      print "Enter a single character: "
       @guess = gets.chomp.downcase
-      p @guess 
-    end
+    end until @guess.length == 1
+
     @guess
-  end
-  
-  def check_answer
-    if @secret.include?(@guess)
-      p 'That is great'
-    else 
-      p 'That is wrong'
-    end
   end
 
   def reveal_char
-    guess  = @guess
-    secret = @secret.chars
-    hide   = @hide
-    secret.each_with_index do |char, idx|
-      if guess == char 
-        p "the index is: #{idx}"
-        hide[idx] = guess 
-        # p hide
-      end
+    @secret.chars.each_with_index do |char, idx|
+      @hide[idx] = char if char == @guess
     end
-    p hide
+    puts @hide.join(' ')
   end
 
-  def game_result(guess, secret)
-    if guess == secret
-      p 'Congratulations'
+  def game_rounds
+    rounds = 5
+
+    while rounds > 0
+      guess_word
+
+      if @secret.include?(@guess)
+        puts "Correct guess!"
+        reveal_char
+      else
+        rounds -= 1
+        puts "Wrong guess! Remaining attempts: #{rounds}"
+      end
+
+      break if @hide.join == @secret
+    end
+
+    if @hide.join == @secret
+      puts "Congratulations! You won. The word was: #{@secret}"
     else
-      p 'At least u tried'
+      puts "Game over! The word was: #{@secret}"
     end
   end
 end
 
 play = Hangman.new
-secret = play.secret_word
+play.secret_word
 play.hide_secret
-guess = play.guess_word
-play.check_answer
-play.reveal_char
-play.game_result(guess, secret)
+play.game_rounds
+
