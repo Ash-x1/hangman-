@@ -49,9 +49,10 @@ class Hangman
       if guess == char 
         p "the index is: #{idx}"
         hide[idx] = guess 
-        p hide
+        # p hide
       end
     end
+    p hide
   end
 
   def game_result(guess, secret)
