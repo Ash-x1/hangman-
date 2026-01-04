@@ -22,8 +22,13 @@ class Hangman
   end
 
   def guess_word
-    @guess = gets.chomp.downcase
-    p @guess
+    # @guess = gets.chomp.downcase
+    @guess = ""
+    until @guess.length == 1 do 
+      p 'Please insert your guess (tip: you should type only 1 character)'
+      @guess = gets.chomp.downcase
+      p @guess 
+    end
     @guess
   end
 
