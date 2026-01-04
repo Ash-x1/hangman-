@@ -48,6 +48,8 @@ class Hangman
     secret.each_with_index do |char, idx|
       if guess == char 
         p "the index is: #{idx}"
+        hide[idx] = guess 
+        p hide
       end
     end
   end
