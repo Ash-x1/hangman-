@@ -1,4 +1,4 @@
-#!/usr/bin/env ruby
+require_relative 'save'
 
 class Hangman
   attr_reader :secret, :guess, :hide
@@ -12,8 +12,6 @@ class Hangman
   def secret_word
     file = File.readlines('hangman_words.txt').map(&:chomp)
     @secret = file.select { |word| word.length.between?(5, 12) }.sample.downcase
-    p @secret
-    @secret
   end
 
   def hide_secret
@@ -23,9 +21,9 @@ class Hangman
 
   def guess_word
     begin
-      print "Enter a single character: "
+      print "Enter a single character or type 'save': "
       @guess = gets.chomp.downcase
-    end until @guess.length == 1
+    end until @guess.length == 1 || @guess == "save"
 
     @guess
   end
@@ -37,11 +35,15 @@ class Hangman
     puts @hide.join(' ')
   end
 
-  def game_rounds
-    rounds = 5
-
+  def game_rounds(rounds = 4)
     while rounds > 0
       guess_word
+
+      if @guess == "save"
+        SaveGame.save(@secret, @hide, rounds)
+        puts "Game saved."
+        return
+      end
 
       if @secret.include?(@guess)
         puts "Correct guess!"
@@ -59,11 +61,8 @@ class Hangman
     else
       puts "Game over! The word was: #{@secret}"
     end
+
+    SaveGame.delete
   end
 end
-
-play = Hangman.new
-play.secret_word
-play.hide_secret
-play.game_rounds
 
